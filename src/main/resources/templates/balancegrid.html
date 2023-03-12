@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <title>Баланс таблица</title>
+    <th:block th:include="layout/header"></th:block>
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+          href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"
+          href="../../static/css/style.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+    function postData(id, amount) {
+        $.ajax({
+        contentType: "application/json",
+  type: "POST",
+  url: "http://localhost:8090/taxi/transaction",
+  data: `{
+    "id": "`+id+`",
+    "amount": "`+amount+`"
+  }`,
+  success: function (result) {
+     console.log(result);
+  },
+  dataType: "json"
+});
+}
+    </script>
+</head>
+<body>
+<div>Баланс таблица</div>
+<div>
+    <form method="get" action="balance">
+        <label for="startDate">Дата с:</label>
+        <input type="date" th:field="${balanceGrid.startDate}" th:value="${{balanceGrid.startDate}}" id="startDate"
+               name="startDate"/>
+        <label for="endDate">по:</label>
+        <input type="date" th:field="${balanceGrid.endDate}" th:value="${{balanceGrid.endDate}}" id="endDate"
+               name="endDate"/>
+        <button type="submit">Запросить</button>
+    </form>
+</div>
+<tbody>
+<table>
+    <tr>
+        <th>ФИО водителя</th>
+        <th>id</th>
+        <th>Сумма</th>
+
+        <th>Яндекс</th>
+    </tr>
+    <tr th:each="balanceGridItem: ${balanceGrid.balanceGridItem}">
+        <td th:text="${balanceGridItem.fullName}"/>
+        <td th:text="${balanceGridItem.carNum}"/>
+        <td th:text="${balanceGridItem.amount}"/>
+        <td>
+            <div th:each="driverProfile: ${balanceGridItem.driverProfiles}">
+                <span th:text="${driverProfile.firstName}"></span> <span th:text="${driverProfile.lastName}"></span>
+                <button th:drid="${driverProfile.id}" th:bamount="${balanceGridItem.amount}"
+                        th:onclick="postData(this.getAttribute('drid'),this.getAttribute('bamount'));"
+                        name="clickMe" type="button" value="Списать">Списать
+                </button>
+            </div>
+        </td>
+    </tr>
+</table>
+<!--<table>-->
+<!--    <tr th:each="driverProfiles: ${balanceGrid.allDriverProfiles}">-->
+<!--<select id="driverOp" name="driverOp">-->
+<!--    <option th:each="allDriverProfile: ${balanceGridItem.allDriverProfiles}" th:value="${allDriverProfile.id}"-->
+<!--            th:text="${allDriverProfile.lastName}+' '+${allDriverProfile.firstName}"></option>-->
+<!--</select>-->
+<!--</table>-->
+</tbody>
+</html>
