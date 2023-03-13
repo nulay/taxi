@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div th:if="${user != null && user.getLogin() != null}">
+    Welcome [[${user.login}]], click <a th:href="@{/support}">here</a> for help-desk support.
+</div>
+<div th:if="${user == null || user.login == null}">
+    <form method="post" action="login" id="userLogin" name="userLogin">
+        <div><label for="login">Логин:</label>
+            <input type="login" id="login" name="login"></div>
+        <div><label for="password">Пароль:</label>
+            <input type="password" id="password" name="password"/></div>
+        <button type="submit">Залогиниться</button>
+    </form>
+    <div><a href="registration">Регистрация</a></div>
+</div>

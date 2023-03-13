@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <title>Логин</title>
+
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+          href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
+          rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"
+          href="../../static/css/style.css"/>
+</head>
+<body>
+<th:block th:include="layout/user"></th:block>
+<div><a href="index">На главную</a></div>
+<div>
+    <form method="post" action="user-settings" id="userSettings" name="userSettings">
+        <fieldset>
+            <legend>Настройки БелОил</legend>
+            <div><label for="userName">User name:</label>
+                <input type="text" th:field="${userSettings.beloilUserCredential.userName}"
+                       th:value="${{userSettings.beloilUserCredential.userName}}" id="userName" name="userName"></div>
+            <div><label for="password">Пароль:</label>
+                <input type="text" th:field="${userSettings.beloilUserCredential.password}"
+                       th:value="${{userSettings.beloilUserCredential.password}}" id="password" name="password"></div>
+            <div><label for="emitentId">emitentId:</label>
+                <input type="text" th:field="${userSettings.beloilUserCredential.emitentId}"
+                       th:value="${{userSettings.beloilUserCredential.emitentId}}" id="emitentId" name="emitentId"></div>
+            <div><label for="contractId">contractId:</label>
+                <input type="text" th:field="${userSettings.beloilUserCredential.contractId}"
+                       th:value="${{userSettings.beloilUserCredential.contractId}}" id="contractId" name="contractId"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Настройки Яндекс</legend>
+
+            <div><label for="parkId">parkId:</label>
+                <input type="text" th:field="${userSettings.yandexUserCredential.parkId}"
+                       th:value="${{userSettings.yandexUserCredential.parkId}}" id="parkId" name="parkId"></div>
+            <div><label for="apiKey">apiKey:</label>
+                <input type="text" th:field="${userSettings.yandexUserCredential.apiKey}"
+                       th:value="${{userSettings.yandexUserCredential.apiKey}}" id="apiKey" name="apiKey"></div>
+            <div><label for="clientId">clientId:</label>
+                <input type="text" th:field="${userSettings.yandexUserCredential.clientId}"
+                       th:value="${{userSettings.yandexUserCredential.clientId}}" id="clientId" name="clientId"></div>
+        </fieldset>
+        <fieldset>
+            <legend>Настройки Времени запуска</legend>
+
+
+            <p>
+                <input type="radio" th:field="${userSettings.timeUpdate.day}"
+                       th:value="${{userSettings.timeUpdate.day}}" name="day" id="day" />
+                <label for="day">Запускать списание ежедневно</label>
+            </p>
+            <p>
+                <input type="radio" th:field="${userSettings.timeUpdate.week}"
+                       th:value="${{userSettings.timeUpdate.week}}" name="week" id="week"/>
+                <label for="week">Запускать списание раз в неделю</label>
+            </p>
+            <div class="form-group">
+                <label>День недели</label>
+                <div th:each="weekDay : ${T(by.tade.taxi.enums.WeekEnum).values()}">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" th:field="${userSettings.timeUpdate.weekEnum}" th:value="${weekDay}"
+                               class="custom-control-input">
+                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.timeUpdate.weekEnum')}"
+                               th:text="${weekDay}">День недели</label>
+                    </div>
+                </div>
+            </div>
+            <p>
+                <input type="radio" th:field="${userSettings.timeUpdate.monthly}"
+                       th:value="${{userSettings.timeUpdate.monthly}}" name="monthly" id="monthly"/>
+                <label for="monthly">Запускать списание раз в месяц</label>
+            </p>
+        </fieldset>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>

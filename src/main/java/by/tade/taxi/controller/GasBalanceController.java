@@ -51,7 +51,7 @@ public class GasBalanceController {
     @ResponseBody
     public CreateTransactionDto transaction(@RequestBody TransactionDto transaction) {
         OkHttpClient okHttpClient = new OkHttpClient();
-        return yandexService.createTransaction(okHttpClient, transaction, userSession.getYandexUserCredential());
+        return yandexService.createTransaction(okHttpClient, transaction, userSession.getSettings().getYandexUserCredential());
 
     }
 }

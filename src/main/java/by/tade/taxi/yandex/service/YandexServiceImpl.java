@@ -57,7 +57,7 @@ public class YandexServiceImpl implements YandexService {
                                                   YandexUserCredentialDto userCredential) {
 
         MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = RequestBody.create(mediaType, "{\r\n  \"amount\": \"" + transaction.getAmount() + "\",\r\n  " +
+        RequestBody body = RequestBody.create(mediaType, "{\r\n  \"amount\": \"-" + transaction.getAmount() + "\",\r\n  " +
                 "\"category_id\": \"partner_service_manual\"," +
                 "\r\n  \"description\": \"Списание топлива\",\r\n  " +
                 "\"driver_profile_id\": \"" + transaction.getId() + "\",\r\n  " +

@@ -34,8 +34,8 @@ public class GasBalanceServiceImpl implements GasBalanceService {
     public BalanceGridDto getBalance(UserSessionDto userSession, LocalDate startDate, LocalDate endDate) {
 
         OkHttpClient client = new OkHttpClient();
-        AccessDto access = beloilService.getAccessToGas(client, userSession.getBeloilUserCredential());
-        OperationalDto operationalDto = beloilService.getBalance(client, userSession.getBeloilUserCredential(), access, startDate, endDate);
+        AccessDto access = beloilService.getAccessToGas(client, userSession.getSettings().getBeloilUserCredential());
+        OperationalDto operationalDto = beloilService.getBalance(client, userSession.getSettings().getBeloilUserCredential(), access, startDate, endDate);
         DriverProfileGridDto driverProfileGrid = getYandexDriverProfileGrid(userSession);
         List<BalanceGridItemDto> balanceGridItems = operationalDto.getCardList().stream().map(card -> {
             IssueRowsDto issueRow = card.getIssueRows().stream().findFirst().get();
@@ -75,6 +75,6 @@ public class GasBalanceServiceImpl implements GasBalanceService {
 
     private DriverProfileGridDto getYandexDriverProfileGrid(UserSessionDto userSession) {
         OkHttpClient client = new OkHttpClient();
-        return yandexServiceImpl.getDriverProfile(client, userSession.getYandexUserCredential());
+        return yandexServiceImpl.getDriverProfile(client, userSession.getSettings().getYandexUserCredential());
     }
 }

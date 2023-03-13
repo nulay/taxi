@@ -1,15 +1,21 @@
 package by.tade.taxi.dto;
 
-import by.tade.taxi.beloil.dto.BeloilUserCredentialDto;
-import by.tade.taxi.yandex.dto.YandexUserCredentialDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Component("userSession")
 public class UserSessionDto {
-    private BeloilUserCredentialDto beloilUserCredential;
-    private YandexUserCredentialDto yandexUserCredential;
+    private String login;
+    private UserSettingsDto settings;
+
+    public UserSessionDto() {
+        this.settings = new UserSettingsDto();
+    }
 }
