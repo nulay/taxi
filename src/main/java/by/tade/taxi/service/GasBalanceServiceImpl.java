@@ -3,7 +3,6 @@ package by.tade.taxi.service;
 import by.tade.taxi.beloil.dto.AccessDto;
 import by.tade.taxi.beloil.dto.IssueRowsDto;
 import by.tade.taxi.beloil.dto.OperationalDto;
-import by.tade.taxi.beloil.dto.BeloilUserCredentialDto;
 import by.tade.taxi.beloil.service.BeloilService;
 import by.tade.taxi.dto.BalanceGridDto;
 import by.tade.taxi.dto.BalanceGridItemDto;
@@ -12,7 +11,6 @@ import by.tade.taxi.yandex.dto.AccountsDto;
 import by.tade.taxi.yandex.dto.DriverProfileDto;
 import by.tade.taxi.yandex.dto.DriverProfileGridDto;
 import by.tade.taxi.yandex.dto.DriverProfileItemDto;
-import by.tade.taxi.yandex.dto.YandexUserCredentialDto;
 import by.tade.taxi.yandex.service.YandexServiceImpl;
 import com.squareup.okhttp.OkHttpClient;
 import lombok.AllArgsConstructor;
@@ -66,8 +64,8 @@ public class GasBalanceServiceImpl implements GasBalanceService {
             return new ArrayList<>();
         }
         List<DriverProfileDto> itemsDriver = driverProfileGrid.getDriverProfiles().stream().filter(drProf ->
-                driverName.toLowerCase().startsWith(drProf.getDriverProfile().getLastName().toLowerCase()) ||
-                        drProf.getDriverProfile().getId().equals(carNum))
+                        driverName.toLowerCase().startsWith(drProf.getDriverProfile().getLastName().toLowerCase()) ||
+                                drProf.getDriverProfile().getId().equals(carNum))
                 .map(DriverProfileItemDto::getDriverProfile)
                 .toList();
         return itemsDriver;

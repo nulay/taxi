@@ -9,10 +9,13 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import io.netty.handler.codec.http.HttpClientCodec;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -79,6 +82,9 @@ public class BeloilServiceImpl implements BeloilService {
             response = client.newCall(request).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        if(HttpStatus.OK.value() !=  response.code()){
+            throw new RuntimeException("Beloil service is broken");
         }
 
         OperationalDto operational;

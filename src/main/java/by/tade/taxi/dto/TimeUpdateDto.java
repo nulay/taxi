@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Data
 public class TimeUpdateDto {
+    public static final String DAY = "day";
+    public static final String MONTH = "month";
+    public static final String WEEK = "week";
+
     private WeekEnum weekEnum;
 
-    private boolean day;
+    private String scheduler;
 
-    private boolean week;
-    private String weekDay;
-
-    private boolean monthly;
     private String monthDay;
 }

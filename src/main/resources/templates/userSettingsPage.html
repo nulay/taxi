@@ -8,6 +8,10 @@
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"
           href="../../static/css/style.css"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script th:src="@{/js/usersetting.js}"
+            src="../../static/js/usersetting.js"></script>
 </head>
 <body>
 <th:block th:include="layout/user"></th:block>
@@ -48,30 +52,35 @@
 
 
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.day}"
-                       th:value="${{userSettings.timeUpdate.day}}" name="day" id="day" />
+                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                       value="day" id="day"/>
                 <label for="day">Запускать списание ежедневно</label>
             </p>
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.week}"
-                       th:value="${{userSettings.timeUpdate.week}}" name="week" id="week"/>
+                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                       value="week" id="week"/>
                 <label for="week">Запускать списание раз в неделю</label>
             </p>
-            <div class="form-group">
+            <div class="form-group" style="display:none" id="weekDayView">
                 <label>День недели</label>
                 <div th:each="weekDay : ${T(by.tade.taxi.enums.WeekEnum).values()}">
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" th:field="${userSettings.timeUpdate.weekEnum}" th:value="${weekDay}"
                                class="custom-control-input">
-                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.timeUpdate.weekEnum')}"
-                               th:text="${weekDay}">День недели</label>
+<!--                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.timeUpdate.weekEnum')}"-->
+                        <label class="custom-control-label"   th:text="${weekDay}">День недели</label>
                     </div>
                 </div>
             </div>
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.monthly}"
-                       th:value="${{userSettings.timeUpdate.monthly}}" name="monthly" id="monthly"/>
-                <label for="monthly">Запускать списание раз в месяц</label>
+                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                       value="month" id="month"/>
+                <label for="month">Запускать списание раз в месяц</label>
+            </p>
+            <p style="display:none" id="monthDayView">
+                <input type="text" th:field="${userSettings.timeUpdate.scheduler}"
+                       th:value="${userSettings.timeUpdate.monthDay}" id="monthDay"/>
+                <label for="monthDay">Укажите день месяца</label>
             </p>
         </fieldset>
         <button type="submit">Сохранить</button>

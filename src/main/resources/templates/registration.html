@@ -2,29 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <title>Логин</title>
-
-    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
-          href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
-          rel="stylesheet" media="screen"/>
-    <link rel="stylesheet" th:href="@{/css/style.css}"
-          href="../../static/css/style.css"/>
+    <th:block th:include="layout/header"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script th:src="@{/js/registration.js}"
+            src="../../static/js/registration.js"></script>
 </head>
 <body>
-<div>Логин</div>
-<th:block th:include="layout/user"></th:block>
-<div th:if="${user == null}>
+<div><a href="index">На главную</a></div>
+<div th:if="${user == null || user.login == null}">
     <form method="post" action="registration" id="userRegistration" name="userRegistration">
         <div><label for="login">Логин:</label>
             <input type="login" id="login" name="login"></div>
         <div><label for="password">Пороль:</label>
             <input type="password" id="password" name="password"/></div>
-        <div><label for="loginRepeat">Логин:</label>
-            <input type="login" id="loginRepeat" name="loginRepeat"></div>
         <div><label for="passwordRepeat">Повтор пороля:</label>
             <input type="password" id="passwordRepeat" name="passwordRepeat"/></div>
         <button type="submit">Зарегестрироваться</button>
     </form>
-    <div><a href="/registration">Регистрация</a></div>
 </div>
 </body>
 </html>

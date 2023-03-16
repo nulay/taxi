@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     public boolean login(UserLoginDto userLogin) {
         UserStorageDto userStorage = null;
         try {
-            userStorage = loadUser();
+            userStorage = loadAllUsers();
         } catch (IOException e) {
             throw new RuntimeException("User not found");
         }
@@ -38,8 +38,10 @@ public class UserServiceImpl implements UserService {
                         userLogin.getPassword().equals(userLoginIn.getPassword())).findFirst();
         if (userO.isPresent()) {
             UserDto user = userO.get();
-            userSession.getSettings().setBeloilUserCredential(user.getSettings().getBeloilUserCredential());
-            userSession.getSettings().setYandexUserCredential(user.getSettings().getYandexUserCredential());
+            if(user.getSettings()!=null) {
+                userSession.getSettings().setBeloilUserCredential(user.getSettings().getBeloilUserCredential());
+                userSession.getSettings().setYandexUserCredential(user.getSettings().getYandexUserCredential());
+            }
             userSession.setLogin(user.getLogin());
             return true;
         } else {
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
             throw new LoggingException("Password and repeat password don't match");
         }
         try {
-            UserStorageDto userStorage = loadUser();
+            UserStorageDto userStorage = loadAllUsers();
             Optional<UserDto> userO = userStorage.getUsers().stream()
                     .filter(userLoginIn -> registration.getLogin().equals(userLoginIn.getLogin())).findFirst();
             if (userO.isPresent()) {
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
     public boolean saveUserSettings(UserSettingsDto userSettings) {
         UserStorageDto userStorage = null;
         try {
-            userStorage = loadUser();
+            userStorage = loadAllUsers();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -83,12 +85,10 @@ public class UserServiceImpl implements UserService {
                 .filter(userLoginIn -> userSession.getLogin().equals(userLoginIn.getLogin())).findFirst();
         if (userO.isPresent()) {
             UserDto user = userO.get();
-            user.getSettings().setBeloilUserCredential(userSettings.getBeloilUserCredential());
-            user.getSettings().setYandexUserCredential(userSettings.getYandexUserCredential());
+            user.setSettings(userSettings);
             try {
                 saveUser(userStorage);
-                userSession.getSettings().setYandexUserCredential(userSettings.getYandexUserCredential());
-                userSession.getSettings().setBeloilUserCredential(userSettings.getBeloilUserCredential());
+                userSession.setSettings(userSettings);
                 return true;
             } catch (IOException e) {
                 throw new RuntimeException("May not to update user settings");
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
         return userSession;
     }
 
-    private UserStorageDto loadUser() throws IOException {
+    public UserStorageDto loadAllUsers() throws IOException {
         return objectMapper.readValue(ResourceUtils.getFile(
                 "classpath:data/user.json"), UserStorageDto.class);
     }

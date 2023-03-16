@@ -27,8 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/index")
-    public String loginPageView(Model model) {
-        model.addAttribute("user", userService.getUserSession());
+    public String loginPageView() {
         return "start";
     }
 
@@ -53,8 +52,15 @@ public class UserController {
         if (userSession.getLogin() == null) {
             return "redirect:/index";
         }
-        model.addAttribute("user", userSession);
         model.addAttribute("userSettings", userSession.getSettings());
         return "userSettingsPage";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        UserSessionDto userSession = userService.getUserSession();
+        userSession.setLogin(null);
+        userSession.setSettings(new UserSettingsDto());
+        return "start";
     }
 }

@@ -1,6 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <div th:if="${user != null && user.getLogin() != null}">
     Welcome [[${user.login}]], click <a th:href="@{/support}">here</a> for help-desk support.
+    <form align="right" name="form1" method="get" action="logout">
+        <label class="submitlogout">
+            <input name="submitlogout" type="submit" id="submitlogout" value="Выйти">
+        </label>
+    </form>
 </div>
 <div th:if="${user == null || user.login == null}">
     <form method="post" action="login" id="userLogin" name="userLogin">
@@ -10,5 +15,5 @@
             <input type="password" id="password" name="password"/></div>
         <button type="submit">Залогиниться</button>
     </form>
-    <div><a href="registration">Регистрация</a></div>
+    <div><a href="registration-page">Регистрация</a></div>
 </div>
