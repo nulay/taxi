@@ -10,7 +10,7 @@ public class UserDto {
     private String login;
     private String password;
 
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endActivationDate;
     private UserSettingsDto settings;
 }

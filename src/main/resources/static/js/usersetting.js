@@ -1,6 +1,6 @@
  $(document).ready( function () {
      switchRadioButton();
-         $("input[name='timeUpdate.scheduler']").click(function(){
+         $("input[name='writeOffGasTime.scheduler']").click(function(){
              switchRadioButton();
          });
  });

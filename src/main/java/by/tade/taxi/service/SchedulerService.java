@@ -1,6 +1,6 @@
 package by.tade.taxi.service;
 
-import by.tade.taxi.dto.TimeUpdateDto;
+import by.tade.taxi.dto.WriteOffGasTimeDto;
 import by.tade.taxi.dto.UserDto;
 import by.tade.taxi.dto.UserStorageDto;
 import lombok.AllArgsConstructor;
@@ -57,20 +57,20 @@ public class SchedulerService {
 
 
 //        00 01 * * THU - каждую среду в час ночи
-        TimeUpdateDto timeUpdate = userDto.getSettings().getTimeUpdate();
+        WriteOffGasTimeDto writeOffGasTime = userDto.getSettings().getWriteOffGasTime();
 
         String cronExpression = "";
-        if (timeUpdate.getScheduler().equals(TimeUpdateDto.DAY)) {
+        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.DAY)) {
             cronExpression = "00 00 01 * * *"; // Каждый день в 1 час ночи
         }
 
-        if (timeUpdate.getScheduler().equals(TimeUpdateDto.WEEK)) {
+        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.WEEK)) {
             cronExpression = "0/"+random_int+" * * * * *";
-//            cronExpression = "00 00 01 * * " + timeUpdate.getWeekEnum().getValue();// Каждую неделю в день WeekEnum в 1 час ночи
+//            cronExpression = "00 00 01 * * " + writeOffGasTime.getWeekEnum().getValue();// Каждую неделю в день WeekEnum в 1 час ночи
         }
 
-        if (timeUpdate.getScheduler().equals(TimeUpdateDto.MONTH)) {
-            cronExpression = "00 00 01 * " + timeUpdate.getMonthDay() + " *"; // Каждый месяц в день MonthDay в 1 час ночи
+        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.MONTH)) {
+            cronExpression = "00 00 01 * " + writeOffGasTime.getMonthDay() + " *"; // Каждый месяц в день MonthDay в 1 час ночи
         }
 
 //        scheduler.initialize();
@@ -95,11 +95,11 @@ public class SchedulerService {
             log.error("This user task is started");
             return false;
         }
-        if (userDto.getEndActivationDate().isBefore(LocalDate.now())) {
+        if (userDto.getEndActivationDate() == null || userDto.getEndActivationDate().isBefore(LocalDate.now())) {
             log.error("User activation is finished");
             return false;
         }
-        if (userDto.getSettings() == null || userDto.getSettings().getTimeUpdate() == null) {
+        if (userDto.getSettings() == null || userDto.getSettings().getWriteOffGasTime() == null) {
             log.error("User settings is not right");
             return false;
         }

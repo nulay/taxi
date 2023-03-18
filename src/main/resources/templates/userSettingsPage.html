@@ -52,12 +52,12 @@
 
 
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                <input type="radio" th:field="${userSettings.writeOffGasTime.scheduler}"
                        value="day" id="day"/>
                 <label for="day">Запускать списание ежедневно</label>
             </p>
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                <input type="radio" th:field="${userSettings.writeOffGasTime.scheduler}"
                        value="week" id="week"/>
                 <label for="week">Запускать списание раз в неделю</label>
             </p>
@@ -65,21 +65,21 @@
                 <label>День недели</label>
                 <div th:each="weekDay : ${T(by.tade.taxi.enums.WeekEnum).values()}">
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" th:field="${userSettings.timeUpdate.weekEnum}" th:value="${weekDay}"
+                        <input type="radio" th:field="${userSettings.writeOffGasTime.weekEnum}" th:value="${weekDay}"
                                class="custom-control-input">
-<!--                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.timeUpdate.weekEnum')}"-->
+<!--                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.writeOffGasTime.weekEnum')}"-->
                         <label class="custom-control-label"   th:text="${weekDay}">День недели</label>
                     </div>
                 </div>
             </div>
             <p>
-                <input type="radio" th:field="${userSettings.timeUpdate.scheduler}"
+                <input type="radio" th:field="${userSettings.writeOffGasTime.scheduler}"
                        value="month" id="month"/>
                 <label for="month">Запускать списание раз в месяц</label>
             </p>
             <p style="display:none" id="monthDayView">
-                <input type="text" th:field="${userSettings.timeUpdate.scheduler}"
-                       th:value="${userSettings.timeUpdate.monthDay}" id="monthDay"/>
+                <input type="text" th:field="${userSettings.writeOffGasTime.scheduler}"
+                       th:value="${userSettings.writeOffGasTime.monthDay}" id="monthDay"/>
                 <label for="monthDay">Укажите день месяца</label>
             </p>
         </fieldset>

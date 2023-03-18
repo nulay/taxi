@@ -11,7 +11,7 @@ public class UserSettingsDto {
     private BeloilUserCredentialDto beloilUserCredential;
     private YandexUserCredentialDto yandexUserCredential;
 
-    private TimeUpdateDto timeUpdate;
+    private WriteOffGasTimeDto writeOffGasTime;
     private List<DiscountGasDto> discountGas;
 
 }

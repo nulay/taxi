@@ -6,7 +6,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RegistrationDto {
-    public String login;
-    public String password;
-    public String passwordRepeat;
+    private String login;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String phone;
+
+    private String password;
+    private String passwordRepeat;
 }

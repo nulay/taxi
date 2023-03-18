@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "login": "tade",
+      "password": "tade123",
+      "endActivationDate": "2024-03-16",
+      "settings": {
+        "beloilUserCredential": {
+          "userName": "650.6410289",
+          "password": "90Denis90",
+          "emitentId": "650",
+          "contractId": "6410289"
+        },
+        "yandexUserCredential": {
+          "parkId": "9746a200a7264eb8b6276235608a56b8",
+          "apiKey": "prbCTulIQnCllgdsOAqYxhhajhLjOGpuSR",
+          "clientId": "taxi/park/9746a200a7264eb8b6276235608a56b8"
+        },
+        "writeOffGasTime": {
+          "weekEnum": "WEDNESDAY",
+          "scheduler": "week",
+          "monthDay": null
+        },
+        "discountGas": [{
+          "summ": "500",
+          "percent": "10"
+        }]
+      }
+    }
+  ]
+}
