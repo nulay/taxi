@@ -83,6 +83,19 @@
                 <label for="monthDay">Укажите день месяца</label>
             </p>
         </fieldset>
+        <fieldset>
+            <legend>Скидка на заправку</legend>
+            <ul>
+                <li th:each="discount : ${userSettings.discountGas}">
+                    <div class="ui checkbox">
+                        <label th:text="${discount.summ}">При заправке от : </label>
+                        <input type="text" th:field="*{discount}" th:value="${discount.summ}">
+                        <label th:text="${discount.percent}">BYN. Процент: </label>
+                        <input type="text" th:field="*{discount}" th:value="${discount.percent}">
+                    </div>
+                </li>
+            </ul>
+        </fieldset>
         <button type="submit">Сохранить</button>
     </form>
 </div>

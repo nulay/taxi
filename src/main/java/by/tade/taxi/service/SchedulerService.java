@@ -5,6 +5,7 @@ import by.tade.taxi.dto.UserDto;
 import by.tade.taxi.dto.UserStorageDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SchedulerService {
     private final UserService userService;
+    private final ThreadPoolTaskScheduler poolTaskScheduler;
     private final Map<String, ScheduledFuture<?>> mapSchedulersOnLogin = new HashMap<>();
 
     public void start() {
@@ -38,40 +40,42 @@ public class SchedulerService {
     private void doSomething() {
     }
 
+
     public void add(UserDto userDto) {
         if (!validateTask(userDto)) return;
 
         SchedulerAction schedulerAction = new SchedulerAction(userDto);
         int min = 3;
-        int max = 10;
+        int max = 9;
         int random_int = (int) Math.floor(Math.random() * (max - min + 1) + min);
 
         Runnable task = () -> schedulerAction.executeOil();
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+//
+//        ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(task, random_int, random_int, TimeUnit.SECONDS);
 
-        ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(task, random_int, random_int, TimeUnit.SECONDS);
 
-        mapSchedulersOnLogin.put(userDto.getLogin(), scheduledFuture);
 
 //        00 01 * * THU - каждую среду в час ночи
         TimeUpdateDto timeUpdate = userDto.getSettings().getTimeUpdate();
 
         String cronExpression = "";
         if (timeUpdate.getScheduler().equals(TimeUpdateDto.DAY)) {
-            cronExpression = "00 01 * * *"; // Каждый день в 1 час ночи
+            cronExpression = "00 00 01 * * *"; // Каждый день в 1 час ночи
         }
 
         if (timeUpdate.getScheduler().equals(TimeUpdateDto.WEEK)) {
-            cronExpression = "00 01 * * " + timeUpdate.getWeekEnum().getValue(); // Каждую неделю в день  в 1 час ночи
+            cronExpression = "0/"+random_int+" * * * * *";
+//            cronExpression = "00 00 01 * * " + timeUpdate.getWeekEnum().getValue();// Каждую неделю в день WeekEnum в 1 час ночи
         }
 
         if (timeUpdate.getScheduler().equals(TimeUpdateDto.MONTH)) {
-            cronExpression = "00 01 * " + timeUpdate.getMonthDay() + " *"; // Каждый месяц в день MonthDay в 1 час ночи
+            cronExpression = "00 00 01 * " + timeUpdate.getMonthDay() + " *"; // Каждый месяц в день MonthDay в 1 час ночи
         }
 
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.initialize();
-        scheduler.schedule(task, new CronTrigger(cronExpression));
+//        scheduler.initialize();
+        ScheduledFuture<?> scheduledFuture = poolTaskScheduler.schedule(task, new CronTrigger(cronExpression));
+        mapSchedulersOnLogin.put(userDto.getLogin(), scheduledFuture);
 
         // Schedule a task that will be executed in 120 sec
 //        ScheduledFuture<?> scheduledFuture = executor.schedule(task, 120, TimeUnit.SECONDS);
@@ -103,10 +107,10 @@ public class SchedulerService {
     }
 
     public void cancel(UserDto userDto) {
-        ScheduledFuture<?> scheduledFuture = mapSchedulersOnLogin.get(userDto.getLogin());
-        if (scheduledFuture == null) {
+        ScheduledFuture<?> scheduler = mapSchedulersOnLogin.get(userDto.getLogin());
+        if (scheduler == null) {
             throw new RuntimeException("This user don't have a started task");
         }
-        scheduledFuture.cancel(false);
+        scheduler.cancel(false);
     }
 }
