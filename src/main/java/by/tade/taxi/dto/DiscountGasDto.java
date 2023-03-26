@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscountGasDto {
-    private Integer summ;
+    private String summ;
     private String percent;
 }

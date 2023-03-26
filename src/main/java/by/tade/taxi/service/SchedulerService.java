@@ -23,17 +23,12 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 @Slf4j
 public class SchedulerService {
-    private final UserService userService;
+
     private final ThreadPoolTaskScheduler poolTaskScheduler;
     private final Map<String, ScheduledFuture<?>> mapSchedulersOnLogin = new HashMap<>();
 
-    public void start() {
-        UserStorageDto userStorage = null;
-        try {
-            userStorage = userService.loadAllUsers();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void start(UserStorageDto userStorage) {
+
         userStorage.getUsers().forEach(user -> add(user));
     }
 
@@ -59,21 +54,24 @@ public class SchedulerService {
 //        00 01 * * THU - каждую среду в час ночи
         WriteOffGasTimeDto writeOffGasTime = userDto.getSettings().getWriteOffGasTime();
 
-        String cronExpression = "";
-        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.DAY)) {
+        String cronExpression = null;
+        if (writeOffGasTime.getScheduler().contains(WriteOffGasTimeDto.DAY)) {
             cronExpression = "00 00 01 * * *"; // Каждый день в 1 час ночи
         }
 
-        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.WEEK)) {
+        if (writeOffGasTime.getScheduler().contains(WriteOffGasTimeDto.WEEK)) {
             cronExpression = "0/"+random_int+" * * * * *";
 //            cronExpression = "00 00 01 * * " + writeOffGasTime.getWeekEnum().getValue();// Каждую неделю в день WeekEnum в 1 час ночи
         }
 
-        if (writeOffGasTime.getScheduler().equals(WriteOffGasTimeDto.MONTH)) {
+        if (writeOffGasTime.getScheduler().contains(WriteOffGasTimeDto.MONTH)) {
             cronExpression = "00 00 01 * " + writeOffGasTime.getMonthDay() + " *"; // Каждый месяц в день MonthDay в 1 час ночи
         }
 
-//        scheduler.initialize();
+        if (cronExpression == null){
+            return;
+        }
+
         ScheduledFuture<?> scheduledFuture = poolTaskScheduler.schedule(task, new CronTrigger(cronExpression));
         mapSchedulersOnLogin.put(userDto.getLogin(), scheduledFuture);
 
@@ -106,11 +104,11 @@ public class SchedulerService {
         return true;
     }
 
-    public void cancel(UserDto userDto) {
+    public boolean cancel(UserDto userDto) {
         ScheduledFuture<?> scheduler = mapSchedulersOnLogin.get(userDto.getLogin());
         if (scheduler == null) {
-            throw new RuntimeException("This user don't have a started task");
+            return true;
         }
-        scheduler.cancel(false);
+        return scheduler.cancel(false);
     }
 }

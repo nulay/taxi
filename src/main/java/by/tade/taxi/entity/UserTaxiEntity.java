@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -46,15 +45,15 @@ public class UserTaxiEntity {
     @Column(name = "end_activation_date")
     private LocalDate endActivationDate;
 
-    @Column(name = "beloil_credential")
+    @Column(name = "beloil_credential", columnDefinition = "TEXT")
     private String beloilCredential;
 
-    @Column(name = "yandex_credential")
+    @Column(name = "yandex_credential", columnDefinition = "TEXT")
     private String yandexCredential;
 
-    @Column(name = "write_off_gas_time")
+    @Column(name = "write_off_gas_time", columnDefinition = "TEXT")
     private String writeOffGasTime;
 
-    @Column(name = "discount_gas")
+    @Column(name = "discount_gas", columnDefinition = "TEXT")
     private String discountGas;
 }

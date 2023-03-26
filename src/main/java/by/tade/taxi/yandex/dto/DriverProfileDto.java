@@ -1,6 +1,5 @@
 package by.tade.taxi.yandex.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -14,7 +13,6 @@ public class DriverProfileDto {
     private String lastName;
     @JsonProperty("middle_name")
     private String middleName;
-
 
 
     private String balance;

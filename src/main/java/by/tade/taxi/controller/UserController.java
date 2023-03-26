@@ -1,5 +1,6 @@
 package by.tade.taxi.controller;
 
+import by.tade.taxi.dto.DiscountGasDto;
 import by.tade.taxi.dto.RegistrationDto;
 import by.tade.taxi.dto.UserLoginDto;
 import by.tade.taxi.dto.UserSessionDto;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -39,7 +41,7 @@ public class UserController {
 
     @PostMapping("/registration")
     public String registration(@ModelAttribute("userLogin") RegistrationDto registration) {
-        return userService.registration(registration) == true ? "redirect:/balance" : "index";
+        return userService.registration(registration) == true ? "index" : "index";
     }
 
     @GetMapping("/registration-page")
@@ -55,11 +57,12 @@ public class UserController {
 
     @GetMapping("/user-settings-page")
     public String userSettingsPageView(Model model) {
-        UserSessionDto userSession = userService.getUserSession();
-        if (userSession.getLogin() == null) {
-            return "redirect:/index";
+        UserSettingsDto userSettings = userService.getUserSettings();
+
+        while(userSettings.getDiscountGas().size() < 10){
+            userSettings.getDiscountGas().add(new DiscountGasDto("0", "0"));
         }
-        model.addAttribute("userSettings", userSession.getSettings());
+        model.addAttribute("userSettings", userSettings);
         return "userSettingsPage";
     }
 

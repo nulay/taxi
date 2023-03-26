@@ -77,8 +77,7 @@ public abstract class UserMapper {
             return null;
         }
         try {
-            return objectMapper.readValue(registrationDto.getDiscountGas(), new TypeReference<List<DiscountGasDto>>() {
-            });
+            return objectMapper.readValue(registrationDto.getDiscountGas(), new TypeReference<List<DiscountGasDto>>(){});
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

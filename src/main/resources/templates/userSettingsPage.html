@@ -17,7 +17,7 @@
 <th:block th:include="layout/user"></th:block>
 <div><a href="index">На главную</a></div>
 <div>
-    <form method="post" action="user-settings" id="userSettings" name="userSettings">
+    <form method="post" action="user-settings" id="userSettings" name="userSettings" >
         <fieldset>
             <legend>Настройки БелОил</legend>
             <div><label for="userName">User name:</label>
@@ -50,7 +50,11 @@
         <fieldset>
             <legend>Настройки Времени запуска</legend>
 
-
+            <p>
+                <input type="radio" th:field="${userSettings.writeOffGasTime.scheduler}"
+                       value="" id="nostart"/>
+                <label for="nostart">Не запускать списание</label>
+            </p>
             <p>
                 <input type="radio" th:field="${userSettings.writeOffGasTime.scheduler}"
                        value="day" id="day"/>
@@ -67,7 +71,7 @@
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" th:field="${userSettings.writeOffGasTime.weekEnum}" th:value="${weekDay}"
                                class="custom-control-input">
-<!--                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.writeOffGasTime.weekEnum')}"-->
+                        <!--                        <label class="custom-control-label" th:for="${#ids.prev('userSettings.writeOffGasTime.weekEnum')}"-->
                         <label class="custom-control-label"   th:text="${weekDay}">День недели</label>
                     </div>
                 </div>
@@ -78,23 +82,28 @@
                 <label for="month">Запускать списание раз в месяц</label>
             </p>
             <p style="display:none" id="monthDayView">
-                <input type="text" th:field="${userSettings.writeOffGasTime.scheduler}"
-                       th:value="${userSettings.writeOffGasTime.monthDay}" id="monthDay"/>
+                <input type="text" th:field="${userSettings.writeOffGasTime.monthDay}" id="monthDay"/>
                 <label for="monthDay">Укажите день месяца</label>
             </p>
         </fieldset>
         <fieldset>
             <legend>Скидка на заправку</legend>
-            <ul>
-                <li th:each="discount : ${userSettings.discountGas}">
-                    <div class="ui checkbox">
-                        <label th:text="${discount.summ}">При заправке от : </label>
-                        <input type="text" th:field="*{discount}" th:value="${discount.summ}">
-                        <label th:text="${discount.percent}">BYN. Процент: </label>
-                        <input type="text" th:field="*{discount}" th:value="${discount.percent}">
-                    </div>
-                </li>
-            </ul>
+            <table>
+                <thead>
+                <tr>
+                    <th> При заправке от BYN. </th>
+                    <th> Процент скидки </th>
+                </tr>
+                </thead>
+                <tbody >
+
+                <tr th:each="discount, itemStat : ${userSettings.discountGas}">
+                    <td><input th:name="|discountGas[${itemStat.index}].summ|" th:value="${discount.getSumm()}"/></td>
+                    <td><input th:name="|discountGas[${itemStat.index}].percent|" th:value="${discount.getPercent()}"/></td>
+                </tr>
+                </tbody>
+            </table>
+
         </fieldset>
         <button type="submit">Сохранить</button>
     </form>

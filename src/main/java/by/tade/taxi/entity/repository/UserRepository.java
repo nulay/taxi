@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends IdentifiableRepository<UserTaxiEntity, Long> {
+public interface UserRepository extends IdentifiableRepository<UserTaxiEntity, Integer> {
 
     Optional<UserTaxiEntity> getByLogin(String login);
 

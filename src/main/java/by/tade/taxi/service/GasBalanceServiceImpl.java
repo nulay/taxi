@@ -7,6 +7,7 @@ import by.tade.taxi.beloil.service.BeloilService;
 import by.tade.taxi.dto.BalanceGridDto;
 import by.tade.taxi.dto.BalanceGridItemDto;
 import by.tade.taxi.dto.UserSessionDto;
+import by.tade.taxi.dto.UserSettingsDto;
 import by.tade.taxi.yandex.dto.AccountsDto;
 import by.tade.taxi.yandex.dto.DriverProfileDto;
 import by.tade.taxi.yandex.dto.DriverProfileGridDto;
@@ -29,12 +30,12 @@ public class GasBalanceServiceImpl implements GasBalanceService {
     private final YandexServiceImpl yandexServiceImpl;
 
     @Override
-    public BalanceGridDto getBalance(UserSessionDto userSession, LocalDate startDate, LocalDate endDate) {
+    public BalanceGridDto getBalance(UserSettingsDto userSettings, LocalDate startDate, LocalDate endDate) {
 
         OkHttpClient client = new OkHttpClient();
-        AccessDto access = beloilService.getAccessToGas(client, userSession.getSettings().getBeloilUserCredential());
-        OperationalDto operationalDto = beloilService.getBalance(client, userSession.getSettings().getBeloilUserCredential(), access, startDate, endDate);
-        DriverProfileGridDto driverProfileGrid = getYandexDriverProfileGrid(userSession);
+        AccessDto access = beloilService.getAccessToGas(client, userSettings.getBeloilUserCredential());
+        OperationalDto operationalDto = beloilService.getBalance(client, userSettings.getBeloilUserCredential(), access, startDate, endDate);
+        DriverProfileGridDto driverProfileGrid = getYandexDriverProfileGrid(userSettings);
         List<BalanceGridItemDto> balanceGridItems = operationalDto.getCardList().stream().map(card -> {
             IssueRowsDto issueRow = card.getIssueRows().stream().findFirst().get();
             List<DriverProfileDto> driverProfiles = tryToFindYandexDriver(driverProfileGrid, issueRow.getDriverName(),
@@ -71,8 +72,8 @@ public class GasBalanceServiceImpl implements GasBalanceService {
         return itemsDriver;
     }
 
-    private DriverProfileGridDto getYandexDriverProfileGrid(UserSessionDto userSession) {
+    private DriverProfileGridDto getYandexDriverProfileGrid(UserSettingsDto userSettings) {
         OkHttpClient client = new OkHttpClient();
-        return yandexServiceImpl.getDriverProfile(client, userSession.getSettings().getYandexUserCredential());
+        return yandexServiceImpl.getDriverProfile(client, userSettings.getYandexUserCredential());
     }
 }
