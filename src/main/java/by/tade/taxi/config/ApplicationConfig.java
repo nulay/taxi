@@ -22,4 +22,5 @@ public class ApplicationConfig {
     public ThreadPoolTaskScheduler poolTaskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
+
 }
