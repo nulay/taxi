@@ -20,6 +20,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.apache.logging.log4j.LoggingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +41,15 @@ public class UserServiceImpl implements UserService {
 
     private final LinkOilCardToYandexRepository linkOilCardToYandexRepository;
     private final UserMapper userMapper;
-    private final SchedulerService schedulerService;
+
+    private SchedulerService schedulerService;
 
     @Resource(name = "userSession")
     UserSessionDto userSession;
-
+    @Autowired
+    public void setSchedulerService(SchedulerService schedulerService) {
+        this.schedulerService = schedulerService;
+    }
     @Override
     public boolean login(UserLoginDto userLogin) {
         Optional<UserTaxiEntity> userO = userRepository.getByLoginAndPassword(userLogin.getLogin(), userLogin.getPassword());

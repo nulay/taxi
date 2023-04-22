@@ -89,7 +89,7 @@ public class YandexServiceImpl implements YandexService {
         Optional<DriverProfileItemDto> driverAfterTr = findDriverProfile(driverProfileGridDtoAfterTr, transaction.getDriverProfileId());
         if (driverAfterTr.get().getAccounts().get(0).getBalance().compareTo(driver.get().getAccounts().get(0).getBalance().negate().subtract(summToWriteOfWithDiscount)) > 0) {
             String info =
-                    "Водитель потратил "+summ+". Cписали " + summToWriteOfWithDiscount + ", с баланса водителя " + transaction.getDriverProfileId();
+                    "Водитель потратил " + summ + ". Cписали " + summToWriteOfWithDiscount + ", с баланса водителя " + transaction.getDriverProfileId();
             log.error(info);
             return new CreateTransactionDto(summToWriteOfWithDiscount, "BY", transaction.getDriverProfileId());
 //            return createTransactionDto;
@@ -128,9 +128,9 @@ public class YandexServiceImpl implements YandexService {
 
     @Override
     public CreateTransactionDto writeOffMoneyForListDrivers(OkHttpClient client, List<BalanceGridItemDto> balanceGridItems,
-                                              YandexUserCredentialDto userCredential, List<DiscountGasDto> discountGas) {
-       List<CreateTransactionDto> createTransactions = balanceGridItems.stream()
-               .map(el -> writeOffMoneyForOneDriver(client, el, userCredential, discountGas)).toList();
+                                                            YandexUserCredentialDto userCredential, List<DiscountGasDto> discountGas) {
+        List<CreateTransactionDto> createTransactions = balanceGridItems.stream()
+                .map(el -> writeOffMoneyForOneDriver(client, el, userCredential, discountGas)).toList();
 
         return checkAllMoneyIsWriteOff(client, balanceGridItems, createTransactions, userCredential);
     }
@@ -140,25 +140,25 @@ public class YandexServiceImpl implements YandexService {
 
 
         DriverProfileGridDto driverProfileGridAfterTr = getDriverProfile(client, userCredential);
-        for (int ind=0;ind<balanceGridItems.size();ind++ ) {
+        for (int ind = 0; ind < balanceGridItems.size(); ind++) {
             BalanceGridItemDto balanceGridItem = balanceGridItems.get(ind);
             CreateTransactionDto createTransaction = createTransactions.get(ind);
             Optional<DriverProfileItemDto> driverAfterTr = findDriverProfile(driverProfileGridAfterTr,
                     balanceGridItem.getDriverProfile().getId());
-            if (driverAfterTr.get().getAccounts().get(0).getBalance().compareTo(driver.get().getAccounts().get(0).getBalance().negate().subtract(summToWriteOfWithDiscount)) > 0) {
-                String info =
-                        "Водитель потратил "+summ+". Cписали " + summToWriteOfWithDiscount + ", с баланса водителя " + transaction.getDriverProfileId();
-                log.error(info);
-                return new CreateTransactionDto(summToWriteOfWithDiscount, "BY");
-//            return createTransactionDto;
-            } else {
-                throw new RuntimeException("Не удалось списать деньги пытались списать " + summToWriteOfWithDiscount + " у водителя " + transaction.getDriverProfileId());
-            }
+//            if (driverAfterTr.get().getAccounts().get(0).getBalance().compareTo(driver.get().getAccounts().get(0).getBalance().negate().subtract(summToWriteOfWithDiscount)) > 0) {
+//                String info =
+//                        "Водитель потратил "+summ+". Cписали " + summToWriteOfWithDiscount + ", с баланса водителя " + transaction.getDriverProfileId();
+//                log.error(info);
+//                return new CreateTransactionDto(summToWriteOfWithDiscount, "BY");
+////            return createTransactionDto;
+//            } else {
+//                throw new RuntimeException("Не удалось списать деньги пытались списать " + summToWriteOfWithDiscount + " у водителя " + transaction.getDriverProfileId());
+//            }
         }
-
+        return null;
     }
 
-    public BigDecimal getDiscountPercent(BigDecimal amount, List<DiscountGasDto> discountGas){
+    public BigDecimal getDiscountPercent(BigDecimal amount, List<DiscountGasDto> discountGas) {
         return discountGas.stream()
                 .sorted(Comparator.comparing(DiscountGasDto::getSumm).reversed())
                 .filter(discountGasDto -> amount.compareTo(discountGasDto.getSumm()) > 0)

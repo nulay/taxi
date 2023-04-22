@@ -9,8 +9,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 @AllArgsConstructor
 @Data
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-@Component("userSession")
+//@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Component("userSession")
 public class UserSessionDto {
 
     private Integer idUser;
