@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class UserController {
         UserSettingsDto userSettings = userService.getUserSettings();
 
         while(userSettings.getDiscountGas().size() < 10){
-            userSettings.getDiscountGas().add(new DiscountGasDto("0", "0"));
+            userSettings.getDiscountGas().add(new DiscountGasDto(BigDecimal.ZERO, BigDecimal.ZERO));
         }
         model.addAttribute("userSettings", userSettings);
         return "userSettingsPage";
@@ -69,8 +70,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
         UserSessionDto userSession = userService.getUserSession();
-        userSession.setLogin(null);
-        userSession.setSettings(new UserSettingsDto());
+        userSession.clean();
         return "start";
     }
 }

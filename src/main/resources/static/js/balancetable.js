@@ -6,13 +6,13 @@ $(document).ready( function () {
 
 });
 
-function executeTransaction(id, amount) {
+function executeTransaction(driverProfileId, amount) {
         $.ajax({
         contentType: "application/json",
   type: "POST",
   url: "transaction",
   data: `{
-    "id": "`+id+`",
+    "driverProfileId": "`+driverProfileId+`",
     "amount": "`+amount+`"
   }`,
   success: function (result) {
@@ -49,18 +49,21 @@ function handleBalanceData(balanceGridData) {
         var balanceGridItem = balanceGridData.balanceGridItem[i];
         var idB = "b-" + i;
         var but = "";
-        if(balanceGridItem.carNum != null && balanceGridItem.carNum != ""){
-            but = '<button id="'+idB+'">Списать</button>';
+        if(balanceGridItem.cardNum != null && balanceGridItem.cardNum != "" && balanceGridItem.driverProfile != null){
+            but = '<button id="'+idB+'" onclick="executeTransaction('+balanceGridItem.driverProfile.id+', '+balanceGridItem.amount+')">Списать</button>';
         }
-        oTable.row.add([balanceGridItem.fullName,
-                  balanceGridItem.carNum,
+        var balanceDriver = "";
+        var fullName = "";
+        if(balanceGridItem.driverProfile !=null){
+            balanceDriver = balanceGridItem.driverProfile.balance;
+            fullName =  balanceGridItem.driverProfile.driverFullName;
+        }
+        oTable.row.add([fullName,
+                  balanceGridItem.cardNum,
                   balanceGridItem.amount,
+                  balanceDriver,
                   but
                   ]).draw();
-        $('#'+idB).click(createFunction(balanceGridItem.carNum, balanceGridItem.amount));
     }
 }
 
-function createFunction(id, amount){
-  return function(){executeTransaction(id, amount);};
-}

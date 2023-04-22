@@ -21,6 +21,8 @@ public interface UserService {
 
     UserSettingsDto getUserSettings();
 
+    UserSettingsDto getUserSettings(String login);
+
     UserStorageDto loadAllUsers();
 
     void linkCardWithYandexProfile(LinkCardWithYandexProfileRequestDto linkCardWithYandexProfileRequest);

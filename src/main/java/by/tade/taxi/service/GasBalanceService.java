@@ -7,5 +7,5 @@ import by.tade.taxi.dto.UserSettingsDto;
 import java.time.LocalDate;
 
 public interface GasBalanceService {
-    BalanceGridDto getBalance(UserSettingsDto userSettings, LocalDate startDate, LocalDate endDate);
+    BalanceGridDto getBalance(UserSessionDto userSession, UserSettingsDto userSettings, LocalDate startDate, LocalDate endDate);
 }

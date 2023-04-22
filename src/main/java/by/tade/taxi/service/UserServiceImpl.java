@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
         if (userO.isPresent()) {
             UserTaxiEntity user = userO.get();
             userSession.setLogin(user.getLogin());
+            userSession.setIdUser(user.getId());
             return true;
         } else {
             throw new RuntimeException("User not found");
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<DiscountGasDto> clean(List<DiscountGasDto> discountGas) {
-        return discountGas.stream().filter(discount -> !discount.getPercent().equals("0") && !discount.getSumm().equals("0")).toList();
+        return discountGas.stream().filter(discount -> !discount.getPercent().equals(0) && !discount.getSumm().equals(0)).toList();
     }
 
     private WriteOffGasTimeDto clean(WriteOffGasTimeDto writeOffGasTime) {
@@ -130,8 +131,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserSettingsDto getUserSettings() {
-        Optional<UserTaxiEntity> userO = userRepository.getByLogin(userSession.getLogin());
+    public UserSettingsDto getUserSettings(String login) {
+        Optional<UserTaxiEntity> userO = userRepository.getByLogin(login);
         if (userO.isPresent()) {
             UserDto userDto = userMapper.toUserDto(userO.get());
             return userDto.getSettings();
@@ -142,6 +143,11 @@ public class UserServiceImpl implements UserService {
         userSettings.setDiscountGas(new ArrayList<>());
         userSettings.setWriteOffGasTime(new WriteOffGasTimeDto());
         return userSettings;
+    }
+
+    @Override
+    public UserSettingsDto getUserSettings() {
+        return getUserSettings(userSession.getLogin());
     }
 
     public UserStorageDto loadAllUsers() {

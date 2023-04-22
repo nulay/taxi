@@ -3,21 +3,18 @@ package by.tade.taxi.service;
 import by.tade.taxi.dto.WriteOffGasTimeDto;
 import by.tade.taxi.dto.UserDto;
 import by.tade.taxi.dto.UserStorageDto;
+import by.tade.taxi.entity.repository.LinkOilCardToYandexRepository;
+import by.tade.taxi.yandex.service.YandexServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +24,10 @@ public class SchedulerService {
     private final ThreadPoolTaskScheduler poolTaskScheduler;
     private final Map<String, ScheduledFuture<?>> mapSchedulersOnLogin = new HashMap<>();
 
+    private final GasBalanceService gasBalanceService;
+    private final LinkOilCardToYandexRepository linkOilCardToYandexRepository;
+    private final YandexServiceImpl yandexServiceImpl;
+    private final UserService userService;
     public void start(UserStorageDto userStorage) {
 
         userStorage.getUsers().forEach(user -> add(user));
@@ -35,21 +36,21 @@ public class SchedulerService {
     private void doSomething() {
     }
 
-
     public void add(UserDto userDto) {
         if (!validateTask(userDto)) return;
 
-        SchedulerAction schedulerAction = new SchedulerAction(userDto);
+
         int min = 3;
         int max = 9;
         int random_int = (int) Math.floor(Math.random() * (max - min + 1) + min);
 
-        Runnable task = () -> schedulerAction.executeOil();
+
 //        ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 //
 //        ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(task, random_int, random_int, TimeUnit.SECONDS);
 
-
+        WriteOfGasAction schedulerAction = new WriteOfGasAction(userDto, gasBalanceService, linkOilCardToYandexRepository,
+                yandexServiceImpl, userService);
 
 //        00 01 * * THU - каждую среду в час ночи
         WriteOffGasTimeDto writeOffGasTime = userDto.getSettings().getWriteOffGasTime();
@@ -71,6 +72,8 @@ public class SchedulerService {
         if (cronExpression == null){
             return;
         }
+
+        Runnable task = () -> schedulerAction.execute();
 
         ScheduledFuture<?> scheduledFuture = poolTaskScheduler.schedule(task, new CronTrigger(cronExpression));
         mapSchedulersOnLogin.put(userDto.getLogin(), scheduledFuture);

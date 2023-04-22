@@ -12,10 +12,16 @@ import org.springframework.web.context.WebApplicationContext;
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Component("userSession")
 public class UserSessionDto {
-    private String login;
-    private UserSettingsDto settings;
 
-    public UserSessionDto() {
-        this.settings = new UserSettingsDto();
+    private Integer idUser;
+
+    private String login;
+
+
+
+    public void clean(){
+        this.login = null;
+        this.idUser = null;
+
     }
 }

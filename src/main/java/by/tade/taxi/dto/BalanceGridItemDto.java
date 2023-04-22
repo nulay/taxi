@@ -1,21 +1,21 @@
 package by.tade.taxi.dto;
 
 import by.tade.taxi.yandex.dto.DriverProfileDto;
-import by.tade.taxi.yandex.dto.DriverProfileItemDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 public class BalanceGridItemDto {
 
-    private String fullName;
-    private String carNum;
-    private String amount;
+    private String cardNum;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal amount;
 
-    private List<DriverProfileDto> driverProfiles;
+    private DriverProfileDto driverProfile;
 
 
 }

@@ -1,8 +1,10 @@
 package by.tade.taxi.beloil.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -14,11 +16,14 @@ public class CardStatusDto {
 
     private Integer cardCode;
 
-    private Integer monthNorm;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal monthNorm;
 
-    private Integer dayNorm;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal dayNorm;
 
-    private String dayNormAmount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal dayNormAmount;
 
     private List<OilGroupSetDto> oilGroupSet;
 
@@ -40,9 +45,11 @@ public class CardStatusDto {
 
     private Integer priority;
 
-    private Integer dosePermitted;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal dosePermitted;
 
-    private String dosePermittedAmount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal dosePermittedAmount;
 
     private Boolean kapschCard;
 

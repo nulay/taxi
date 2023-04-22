@@ -1,7 +1,10 @@
 package by.tade.taxi.yandex.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 public class DriverProfileDto {
@@ -15,6 +18,10 @@ public class DriverProfileDto {
     private String middleName;
 
 
-    private String balance;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal balance;
 
+    public String getDriverFullName() {
+        return (firstName + " " + lastName + " " + middleName).trim();
+    }
 }

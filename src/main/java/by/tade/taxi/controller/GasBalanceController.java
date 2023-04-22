@@ -3,15 +3,14 @@ package by.tade.taxi.controller;
 import by.tade.taxi.beloil.dto.CardStatusDto;
 import by.tade.taxi.beloil.service.BeloilService;
 import by.tade.taxi.dto.BalanceGridDto;
-import by.tade.taxi.dto.BalanceGridItemDto;
 import by.tade.taxi.dto.LinkCardWithYandexProfileRequestDto;
-import by.tade.taxi.dto.TransactionDto;
+import by.tade.taxi.dto.UserSettingsDto;
+import by.tade.taxi.yandex.dto.TransactionDto;
 import by.tade.taxi.entity.LinkOilCardToYandexDriverEntity;
 import by.tade.taxi.service.GasBalanceService;
 import by.tade.taxi.service.UserService;
 import by.tade.taxi.yandex.dto.CreateTransactionDto;
 import by.tade.taxi.yandex.dto.DriverProfileDto;
-import by.tade.taxi.yandex.dto.DriverProfileItemDto;
 import by.tade.taxi.yandex.dto.DriverProfileSimpleGridDto;
 import by.tade.taxi.yandex.service.YandexService;
 import com.squareup.okhttp.OkHttpClient;
@@ -43,7 +42,7 @@ public class GasBalanceController {
     private static DriverProfileSimpleGridDto driverProfileSimpleGridDto;
     private static List<CardStatusDto> listCard;
     private static BalanceGridDto balanceGridDto;
-    private boolean cache = false;
+    private boolean cache = true;
 
     @GetMapping("/balance-page")
     public String getBalanceView(Model model) {
@@ -56,21 +55,18 @@ public class GasBalanceController {
     @ResponseBody
     public BalanceGridDto getBalance(@RequestParam(value = "startDate", required = false) String startDate,
                                      @RequestParam(value = "endDate", required = false) String endDate) {
-        if (balanceGridDto == null && cache) {
-            balanceGridDto = gasBalanceService.getBalance(userService.getUserSettings(), getDate(startDate, 1L),
+        if (balanceGridDto == null || !cache) {
+            balanceGridDto = gasBalanceService.getBalance(userService.getUserSession(), userService.getUserSettings(), getDate(startDate,
+                            1L),
                     getDate(endDate, 0L));
         }
         return balanceGridDto;
-//        return new BalanceGridDto(getDate(startDate, 1L), getDate(endDate, 0L), List.of(new BalanceGridItemDto("hj", "sdf", "345", List.of()),
-//                new BalanceGridItemDto("fsf", "sf", "400", List.of()),
-//                new BalanceGridItemDto("ФИО водителя5", "tid5", "Сумма5", List.of())),
-//                List.of());
     }
 
     @GetMapping("/card-data")
     @ResponseBody
     public List<CardStatusDto> getCardStatuses() {
-        if (listCard == null && cache) {
+        if (listCard == null || !cache) {
             listCard = beloilService.getCardStatusesWithAuth(userService.getUserSettings().getBeloilUserCredential());
 
         }else{
@@ -109,14 +105,15 @@ public class GasBalanceController {
     @ResponseBody
     public CreateTransactionDto transaction(@RequestBody TransactionDto transaction) {
         OkHttpClient okHttpClient = new OkHttpClient();
-//        return yandexService.createTransaction(okHttpClient, transaction, userSession.getSettings().getYandexUserCredential());
-        return new CreateTransactionDto(transaction.getAmount(), "BY");
+        UserSettingsDto userSettings = userService.getUserSettings();
+        return yandexService.writeOffMoney(okHttpClient, transaction, userSettings.getYandexUserCredential(),
+                userSettings.getDiscountGas());
     }
 
     @GetMapping("/driver-profile-data")
     @ResponseBody
     public DriverProfileSimpleGridDto getDriverProfileGrid() {
-        if (driverProfileSimpleGridDto == null && cache) {
+        if (driverProfileSimpleGridDto == null || !cache) {
             driverProfileSimpleGridDto = new DriverProfileSimpleGridDto(yandexService.getDriverProfile(new OkHttpClient(),
                             userService.getUserSettings().getYandexUserCredential()).getDriverProfiles().stream()
                     .map(driverProfileItem -> {
